@@ -26,14 +26,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if("/api/login".equals(request.getServletPath())){
+        if("/api/login".equals(request.getServletPath()) || "/api/refreshtoken".equals(request.getServletPath())){
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
-            if(authorizationHeader != null && authorizationHeader.startsWith("Test ")){
+            if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                 try {
-                    String token = authorizationHeader.substring("Test ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    String token = authorizationHeader.substring("Bearer ".length());
+                    Algorithm algorithm = Algorithm.HMAC256("test".getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();

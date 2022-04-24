@@ -34,11 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                        .antMatchers("/api/login/**")
+                        .antMatchers("/api/login/**", "/api/refreshtoken/**")
                         .permitAll();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/appusers/**")
-                .hasAnyAuthority("ROLE_USER");
+                .hasAnyAuthority("ROLE_SUPER_ADMIN");
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/appuser/save/**")
                 .hasAnyAuthority("ROLE_ADMIN");
